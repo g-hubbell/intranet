@@ -1,0 +1,1 @@
+[21-Dec-2016 18:37:25 UTC] PHP Fatal error:  Call to a member function fetch_assoc() on a non-object in /home/technologenie/public_html/hsglobalinc.com/login.php on line 59
