@@ -210,7 +210,7 @@
             <div class = "schedule">
                 <h3 class = "managerschedule">Schedule</h3><br>
                     <form action ="upload-schedule.php" method = "POST" enctype="multipart/form-data">
-                        <input type = "file" name="userFile" id="userFile">
+                        <input type = "file" name="userFile" id="userFile"><br>
                         <input type = "submit" value = "Upload Current Schedule" id ="submit1" name = "submit1">
                         <input type = "submit" value = "Upload Next Schedule" id ="submit2" name = "submit2">
                     </form>
@@ -224,12 +224,13 @@
                     }
                     elseif($day == "Sat"){
                         if(file_exists("../../images/schedule2.PNG")){
+                            chmod('../../schedule.PNG',0644);
                             unlink("../../schedule.PNG");
                             rename("../../images/schedule2.PNG","../../schedule.PNG");
-                            echo("<img src='http://vapeshop.direct/images/schedule.PNG' class = 'schedule-image'>");
+                            echo("<img src='http://vapeshop.direct/schedule.PNG' class = 'schedule-image'>");
                         }
                         else{
-                            echo("<img src='http://vapeshop.direct/images/schedule.PNG' class = 'schedule-image'>");
+                            echo("<img src='http://vapeshop.direct/schedule.PNG' class = 'schedule-image'>");
                         }
                     }
                     else{

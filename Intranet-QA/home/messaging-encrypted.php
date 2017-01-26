@@ -1,6 +1,5 @@
 <?php
     session_start();
-    error_reporting(E_ALL);
     date_default_timezone_set('America/New_York');
     $username = $_SESSION['user'];
     $tablename = $_SESSION['table'];
@@ -22,30 +21,92 @@
         
     }
 
+
+/*SENDER IS KEY*/
+
+    function EncryptMsg($user,$message){
+        $gap=count($message);
+        $splituser=str_split($user);
+        for($i=0;$i<$gap;$i++){
+            $splituser=array_push($splituser,$splituser[$i]);
+        }
+        for($i=0;$i<count($splituser);$i++){
+            $asciiuser[$i]=ord($splituser[$i]);
+        }
+        $splitmsg=explode(" ",$message);
+        $k=0;
+        for($i=0;$i<count($splitmsg);$i++){
+            $splitword=$splitmsg[$i];
+            $splitwrdfinal=str_split($splitmsg[$i]);
+            for($j=0;$j<count($splitwrdfinal);$j++){
+                
+                
+                $asciimsg[$k]=ord($splitwrdfinal[$j]);
+                $k++;
+            }
+            $asciimsg[$k]="47";
+            $k++;
+        }
+        
+        print_r($asciimsg);
+        for($i=0;$i<count($asciimsg);$i++){
+            
+                $asciigap[$i]=$asciiuser[$i]-$asciimsg[$i];
+            
+        }
+        $finalstring=implode(" ",$asciigap);
+        echo($finalstring);
+        return $finalstring;
+        
+        
+    }
+
+    function DecryptMsg($user,$encmessage){
+        $asciimsg=explode(" ",$encmessage);
+        print_r($asciimsg);
+        $gap=count($asciimsg);
+        $splituser=str_split($user);
+        for($i=0;$i<$gap;$i++){
+            $splituser=array_push($splituser,$splituser[$i]);
+        }
+        for($i=0;$i<count($splituser);$i++){
+            $asciiuser[$i]=ord($splituser[$i]);
+        }
+        for($i=0;$i<count($asciimsg);$i++){
+            
+            
+                $asciifinal[$i]=$asciiuser[$i]-$asciimsg[$i];
+            
+            
+        }
+        print_r($asciifinal);
+        for($i=0;$i<count($asciifinal);$i++){
+            if($asciifinal[$i] == "47"){
+                $arrayplainmsg[$i]="/";
+            }
+            else{
+                $arrayplainmsg[$i]=chr($asciifinal[$i]);
+            }
+        }
+        print_r($arrayplainmsg);
+        $finalstr=implode($arrayplainmsg);
+        $finalstring=str_replace("/"," ",$finalstr);
+        return $finalstring;
+        
+        
+    }
+
+
+
     if(isset($_POST['subject'])){
         $sendto = $_POST['sendto'];
         $subject =$_POST['subject'];
         $message =$_POST['message'];
-        $encryptedimploded=array(array());
-        $messagearray=explode(" ",$message);
         
-        for($i=0;$i<count($messagearray);$i++;){
-            for($j=0;$j<count($messagearray[$i]);$j++){
-                 b
-            }
-            
-        }
-        
-        $sql = "INSERT INTO messages (Date,Sender,Recipient,Subject,Message) 
-        VALUES ('$date','$username','$sendto','$subject','$message')";
-        $result = mysql_query($sql,$link);
-        if(!$result){
-            echo(mysql_error());
-        }
-        else{
-            echo("Message Sent!");
-        }
-        
+        $encmessage=EncryptMsg('dave',$message);
+        echo($encmessage);
+        $decmessage=DecryptMsg('dave',$encmessage);
+        echo($decmessage);
         
     }
     
@@ -81,7 +142,7 @@
             
         ?>
             <h2>New Message</h2>
-            <form action ="messaging.php" method ="POST">
+            <form action ="messaging-encrypted.php" method ="POST">
                 <p>From: <?php echo($username);?></p><br>
                 <?php 
                     
@@ -132,7 +193,7 @@
                 <?php
                         $database = "portal_messages";
                         mysql_select_db($database,$link);
-                        $table = "messages";
+                        $table = "messages_enc";
                         $result = mysql_query("SELECT * FROM $table WHERE Recipient ='$username'");
                         $tofrom = "to";
                         $i=0;
@@ -184,7 +245,7 @@
             <h2>Outbox</h2>
                 <?php
                         
-                        $table = "messages";
+                        $table = "messages_enc";
                         $result = mysql_query("SELECT * FROM $table WHERE Sender ='$username'");
                         $tofrom = "from";
                         $i=0;

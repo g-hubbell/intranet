@@ -10,6 +10,7 @@
         if(isset($_POST['submit1'])){
             if (file_exists("../../schedule.PNG"))
             {
+                chmod('../../schedule.PNG',0644);
                 unlink('../../schedule.PNG');
                 $upload= move_uploaded_file($_FILES["userFile"]["tmp_name"], "../../schedule.PNG");
                 if(!$upload){
@@ -33,6 +34,7 @@
         if(isset($_POST['submit2'])){
             if (file_exists("../../images/schedule2.PNG"))
             {
+                chmod('../../schedule.PNG',0644);
                 unlink('../../images/schedule2.PNG');
                 $upload= move_uploaded_file($_FILES["userFile"]["tmp_name"], "../../images/schedule2.PNG");
                 if(!$upload){
